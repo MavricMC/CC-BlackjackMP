@@ -1,6 +1,6 @@
---Blackjack Casino version 0.0.2--
+--Blackjack Casino--
 
-local vers = "0.0.2"
+local vers = "0.2"
 
 --Made by Mavric--
 --How to setup is on my youtube channel--
