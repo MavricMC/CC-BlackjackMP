@@ -1,5 +1,11 @@
-testFolder
-MavricMC/gitGet-Template/main/code.lua
-code.lua
-MavricMC/gitGet-Template/main/functions.lua
-folder/functions.lua
+blackjackC
+MavricMC/CC-BlackjackMP/main/game.lua
+game.lua
+MavricMC/CC-BlackjackMP/main/cards.lua
+cards.lua
+MavricMC/CC-BlackjackMP/main/logo.nfp
+logo.nfp
+MavricMC/CC-BlackjackMP/main/card.nfp
+card.nfp
+MavricMC/CC-BlackjackMP/main/cardBack.nfp
+cardBack.nfp
