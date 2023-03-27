@@ -1,6 +1,6 @@
 --Blackjack Casino--
 
-local vers = "0.2"
+local vers = "0.3"
 
 --Made by Mavric--
 --How to setup is on my youtube channel--
@@ -39,10 +39,10 @@ local mCords = {
 local atm = "casino_1"
 local bankSide = "back"
 local monSide = "top"
-local server = 6
+local server = 5
 local mainC = 5 --channel for sending stuff to the server--
 local players = {10, 20, 30} --there should be a channel for every mirror client--
-local drives = {"drive_3", "drive_2", "drive_4"} --there should be a drive name for every mirror client--
+local drives = {"drive_0", "drive_1", "drive_2"} --there should be a drive name for every mirror client--
 
 local buttons = {
     {"Stand", 16, 20}, --text, x, xend
@@ -271,10 +271,15 @@ function drawButtons(double, bPlayer)
     end
 end
 
-function drawScreen(sNum, dub, play)
+function drawScreen(sNum, dub, play, blank)
     clearScreen(false)
-    for k, v in pairs(cards.dealer) do
-        drawCard(cords[table.maxn(cards.dealer)][k], 4, v[2], v[3])
+    if (blank) then
+        drawCard(cords[2][1], 4, cards.dealer[1][2], cards.dealer[1][3])
+        drawBack(cords[2][2], 4)
+    else
+        for k, v in pairs(cards.dealer) do
+            drawCard(cords[table.maxn(cards.dealer)][k], 4, v[2], v[3])
+        end
     end
     for k, v in pairs(cards.player) do    
         for k2, v2 in pairs(cards.player[k]) do
@@ -363,16 +368,16 @@ function allStand()
     end
     
     local dTotal = getTotal(cards.dealer)
-    
+    local dee = false
     while dTotal < 16 do
         num = math.random(1, table.maxn(cards.deck))
         card = cards.deck[num]
         table.remove(cards.deck, num)
         table.insert(cards.dealer, card)
         dTotal = getTotal(cards.dealer)
-        drawScreen(0, false, false)
+        drawScreen(0, false, false, false)
         if dTotal >= 21 then
-            return true
+            dee = true
         end
     end
 
@@ -389,11 +394,11 @@ function allStand()
             end
         end
     end
-    return false, ress
+    return dee, ress
 end
 
 --setup--
-modem = peripheral.wrap("bottom")
+modem = peripheral.wrap("front")
 modem.open(mainC)
 rednet.open(bankSide)
 
@@ -419,7 +424,7 @@ for k, v in pairs(players) do
 end
 
 --Betting loop--
-local loop = false --true
+local loop = true
 while (loop) do
     local isP = false
     local pNum = 0
@@ -475,26 +480,25 @@ while (loop) do
                                     if string.len(text[pNum][1]) < 6 then
                                         if text[pNum][1] ~= "" then
                                             if (betting[pNum][5] >= tonumber(text[pNum][1]) and tonumber(text[pNum][1]) ~= 0) then
-                                                --local suc, res = withdraw(tonumber(betting[pNum][4], tonumber(text[pNum][1]), atm, 
-												tonumber(text[pNum][2])
-                                                --withdraw amount using bank code
-                                                betting[pNum][2] = true
+                                                local suc, res = withdraw(tonumber(betting[pNum][4]), tonumber(text[pNum][1]), atm, text[pNum][2])
                                                 clearScreenRem(false, false, players[pNum])
                                                 backgroundRem(colours.green, players[pNum])
                                                 cursorRem(11, 13, players[pNum])
-                                                writeRem("Your bet of $".. text[pNum][1].. " has been set", players[pNum])
-                                                cursorRem(7, 14, players[pNum])
-                                                writeRem("You cant undo this but if you walk away", players[pNum])
-                                                cursorRem(14, 15, players[pNum])
-                                                writeRem("your card wont be saved!", players[pNum])
-                                                local endLoop = true
-                                                for k, v in pairs(betting) do
-                                                    if (v[2] == false) then
-                                                        endLoop = false
-                                                    end
-                                                end
-                                                if (endLoop) then
+                                                if (suc) then
+                                                    writeRem("Your bet of $".. text[pNum][1].. " has been set", players[pNum])
+                                                    cursorRem(7, 14, players[pNum])
+                                                    writeRem("You cant undo this but if you walk away", players[pNum])
+                                                    cursorRem(14, 15, players[pNum])
+                                                    writeRem("your card wont be saved!", players[pNum])
+                                                    betting[pNum][2] = tru
                                                     loop = false
+                                                    for k, v in pairs(betting) do
+                                                        if (v[2] == false) then
+                                                            loop = true
+                                                        end
+                                                    end
+                                                else
+                                                    writeRem("Error: ".. res, players[pNum])
                                                 end
                                             else
                                                 clearScreenRem(true, false, players[pNum])
@@ -596,7 +600,7 @@ function mirrorGame(gPlayer, playerNum)
     card = cards.deck[num]
     table.remove(cards.deck, num)
     table.insert(cards.player[playerNum], card)
-    drawScreen(playerNum, Du, true)
+    drawScreen(playerNum, Du, true, true)
     
     loop = true
     while (loop) do
@@ -608,6 +612,10 @@ function mirrorGame(gPlayer, playerNum)
                     if data[5][1] == "mouse_click" then
                         local click, butt = buttonClick(data[5][3], data[5][4], Du)
                         if butt == 1 then
+                            backgroundRem(colours.green, gPlayer)
+                            textRem(colours.black, gPlayer)
+                            cursorRem(18, 6, gPlayer)
+                            writeRem("Stand", gPlayer)
                             return
                         elseif butt == 2 then
                             if table.maxn(cards.player[playerNum]) < 7 then
@@ -615,29 +623,39 @@ function mirrorGame(gPlayer, playerNum)
                                 card = cards.deck[num]
                                 table.remove(cards.deck, num)
                                 table.insert(cards.player[playerNum], card)
-                                drawScreen(playerNum, Du, true)
+                                drawScreen(playerNum, Du, true, true)
                                 
                                 local total = getTotal(cards.player[playerNum])
                                 if total > 21 then
                                     --Player bust--
-                                    cursorRem(10, 4, playerNum)
-                                    writeRem("Bust", playerNum)
+                                    backgroundRem(colours.green, gPlayer)
+                                    textRem(colours.black, gPlayer)
+                                    cursorRem(18, 6, gPlayer)
+                                    writeRem("Bust", gPlayer)
                                     return
                                 end
                                 
                                 if table.maxn(cards.player[playerNum]) > 6 then
                                     --Got 7 cards win out bust--
+                                    backgroundRem(colours.green, gPlayer)
+                                    textRem(colours.black, gPlayer)
+                                    cursorRem(18, 6, gPlayer)
+                                    writeRem("Win", gPlayer)
                                     return
                                 end
                             end
                         elseif butt == 3 then
-                            if table.maxn(cards.player[playerNum]) == 2 then
+                            if (Du) and table.maxn(cards.player[playerNum]) == 2 then
                                 num = math.random(1, table.maxn(cards.deck))
                                 card = cards.deck[num]
                                 table.remove(cards.deck, num)
                                 table.insert(cards.player[playerNum], card)
                                 
-                                drawScreen(playerNum, Du, true)
+                                drawScreen(playerNum, Du, true, true)
+                                backgroundRem(colours.green, gPlayer)
+                                textRem(colours.black, gPlayer)
+                                cursorRem(18, 6, gPlayer)
+                                writeRem("Double", gPlayer)
                                 return
                             end
                         end
@@ -673,18 +691,32 @@ end
 for k, v in pairs(players) do
     mirrorGame(v, k)
 end
-local bust, res = allStand()
+drawScreen(0, Du, false, false)
+local bust, Gres = allStand()
 if (bust) then
     for k, v in pairs(players) do
+        drawScreen(k, Du, true, false)
         backgroundRem(colours.green, v)
         textRem(colours.black, v)
         cursorRem(18, 6, v)
-        if res[k] == 10 then
+        local cash = tonumber(text[k][1])
+        if Gres[k] == 10 then
             writeRem("Bust", v)
-        elseif res[k] == 11 then
+            cash = 0
+        elseif Gres[k] == 11 then
             writeRem("Dealer Bust", v)
+            cash = cash * 2
         else
             writeRem("Error. Returning money", v)
+        end
+        if cash ~= 0 then
+            local suc, res = deposit(tonumber(betting[k][4]), cash, atm, text[k][2])
+            cursorRem(18, 7, v)
+            if (suc) then
+                writeRem("Deposited your winings of: ".. cash, v)
+            else
+                writeRem("Error: ".. res, v)
+            end
         end
     end
     term.setBackgroundColor(colours.green)
@@ -693,22 +725,36 @@ if (bust) then
     write("Dealer bust")
 else
     for k, v in pairs(players) do
+        drawScreen(k, Du, true, false)
         backgroundRem(colours.green, v)
         textRem(colours.black, v)
         cursorRem(18, 6, v)
-        if res[k] == 0 then
+        local cash = tonumber(text[k][1])
+        if Gres[k] == 0 then
             writeRem("Error. Returning money", v)
-        elseif res[k] == 1 then
+        elseif Gres[k] == 1 then
             textRem(colours.red, v)
             writeRem("Win", v)
-        elseif res[k] == 2 then
+            cash = cash * 2
+        elseif Gres[k] == 2 then
             writeRem("Lose", v)
-        elseif res[k] == 3 then
+            cash = 0
+        elseif Gres[k] == 3 then
             writeRem("Push", v)
-        elseif res[k] == 10 then
+        elseif Gres[k] == 10 then
             writeRem("Bust", v)
+            cash = 0
         else
             writeRem("Error. Returning money", v)
+        end
+        if cash ~= 0 then
+            local suc, res = deposit(tonumber(betting[k][4]), cash, atm, text[k][2])
+            cursorRem(18, 7, v)
+            if (suc) then
+                writeRem("Deposited your winings of: ".. cash, v)
+            else
+                writeRem("Error: ".. res, v)
+            end
         end
     end
 end
