@@ -8,7 +8,9 @@ A casino style blackjack multiplayer game for computer craft fork CC:Tweaked a m
 
 # How to install.
 
-To install this github repository in CC-Tweaked you must first run `pastebin get wiededhB gitGet.lua` to install gitGet then run `gitGet install MavricMC/CC-BlackjackMP (put a version number here if you dont want to install latest)`.
+To install this github repository in CC-Tweaked you must first run `pastebin run dgrAh4CY` to install gitGet then run `gitGet install MavricMC/CC-BlackjackMP (put a version number here if you dont want to install latest)`.
 
 
 To install the mirror client on the player computers do `pastebin run vzuUKwJW`
+
+Go Watch my atm video for how to setup the banking server.
