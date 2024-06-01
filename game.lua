@@ -4,7 +4,7 @@ local vers = "0.3"
 
 --Made by Mavric--
 --How to setup is on my youtube channel--
---Code on https://pastebin.com/u/MavricMC--
+--Code on https://github.com/MavricMC/CC-BlackjackMP/--
 
 
 local cords = {
