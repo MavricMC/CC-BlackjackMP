@@ -1,11 +1,11 @@
-blackjackC
+blackjackMP
 MavricMC/CC-BlackjackMP/main/game.lua
 startup.lua
 MavricMC/CC-BlackjackMP/main/cards.lua
-blackjackC/cards.lua
+blackjackMP/cards.lua
 MavricMC/CC-BlackjackMP/main/logo.nfp
-blackjackC/logo.nfp
+blackjackMP/logo.nfp
 MavricMC/CC-BlackjackMP/main/card.nfp
-blackjackC/card.nfp
+blackjackMP/card.nfp
 MavricMC/CC-BlackjackMP/main/cardBack.nfp
-blackjackC/cardBack.nfp
+blackjackMP/cardBack.nfp
