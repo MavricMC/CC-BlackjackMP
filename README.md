@@ -13,4 +13,4 @@ To install this github repository in CC-Tweaked you must first run `pastebin run
 
 To install the mirror client on the player computers do `pastebin run vzuUKwJW`
 
-Go Watch this <a herf="https://youtu.be/Wp8qCBnlh_s">[video](https://youtu.be/jQCn8s4qmc8)</a> for how to setup the banking server.
+Go Watch this <a herf="https://youtu.be/Wp8qCBnlh_s" target="_blank">[video](https://youtu.be/jQCn8s4qmc8)</a> for how to setup the banking server.
