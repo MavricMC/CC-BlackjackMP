@@ -13,4 +13,6 @@ To install this github repository in CC-Tweaked you must first run `pastebin run
 
 To install the mirror client on the player computers do `pastebin run vzuUKwJW`
 
+Go Watch this [video](https://youtu.be/qBVsHSguh2Y) for how to setup the multiplayer blackjack.
+
 Go Watch this [video](https://youtu.be/jQCn8s4qmc8) for how to setup the banking server.
