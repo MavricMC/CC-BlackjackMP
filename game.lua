@@ -1,6 +1,6 @@
 --Blackjack Multiplayer--
 
-local vers = "0.4"
+local vers = "0.5"
 
 --Made by Mavric--
 --How to setup is on my youtube channel--
@@ -46,7 +46,7 @@ local modemSide = "bottom"
 local server = 0
 local mainC = 5 --channel for sending stuff to the server--
 local players = {10, 20, 30} --there should be a channel for every mirror client--
-local drives = {"drive_1", "drive_2", "drive_3"} --there should be a drive name for every mirror client--
+local drives = {"drive_0", "drive_1", "drive_2"} --there should be a drive name for every mirror client--
 local betting = {{}}
 local text = {{}}
 
@@ -173,8 +173,7 @@ function clearScreenRem(idle, insert, Splayer)
         picRem("logo", 20, 4, Splayer)
         if (insert) then
             backgroundRem(colours.green, Splayer)
-            cursorRem(17, 13, Splayer)
-            writeRem("Please insert card", Splayer)
+            writeCenterRem("Please insert card", 13, Splayer)
         end
     end
 end
@@ -199,6 +198,11 @@ function drawBetRem(PIN, number, Bplayer)
         writeRem("BET:", Bplayer)
     end
     drawX(Bplayer)
+end
+
+function writeCenterRem(text, y, player)
+    cursorRem(math.floor(26 - (string.len(text) / 2)), y, player)
+    writeRem(text, player)
 end
 
 function checkX(x, y)
@@ -230,8 +234,7 @@ function clearScreen(insert)
         local pic = paintutils.loadImage("/blackjackMP/logo.nfp")
         paintutils.drawImage(pic, 20, 14)
         term.setBackgroundColour(colours.green)
-        term.setCursorPos(17, 23)
-        term.write("Please insert card")
+        writeCenter("Please insert card", 23)
     end
 end
 
@@ -301,6 +304,11 @@ function drawScreen(sNum, dub, play, blank)
             drawCardRem(mCords[table.maxn(cards.player[sNum])][k], 10, v[2], v[3], players[sNum])
         end
     end
+end
+
+function writeCenter(text, y)
+    term.setCursorPos(math.floor(26 - (string.len(text) / 2)), y)
+    term.write(text)
 end
 
 function getDrive(drive)
@@ -457,8 +465,7 @@ function mirrorGame(gPlayer, playerNum)
                         if butt == 1 then
                             backgroundRem(colours.green, gPlayer)
                             textRem(colours.black, gPlayer)
-                            cursorRem(18, 6, gPlayer)
-                            writeRem("Stand", gPlayer)
+                            writeCenterRem("Stand", 6, gPlayer)
                             return
                         elseif butt == 2 then
                             Du = false
@@ -474,8 +481,7 @@ function mirrorGame(gPlayer, playerNum)
                                     --Player bust--
                                     backgroundRem(colours.green, gPlayer)
                                     textRem(colours.black, gPlayer)
-                                    cursorRem(18, 6, gPlayer)
-                                    writeRem("Bust", gPlayer)
+                                    writeCenterRem("Bust", 6, gPlayer)
                                     return
                                 end
                                 
@@ -483,8 +489,7 @@ function mirrorGame(gPlayer, playerNum)
                                     --Got 7 cards win out bust--
                                     backgroundRem(colours.green, gPlayer)
                                     textRem(colours.black, gPlayer)
-                                    cursorRem(18, 6, gPlayer)
-                                    writeRem("Win", gPlayer)
+                                    writeCenterRem("Win", 6, gPlayer)
                                     return
                                 end
                             end
@@ -502,11 +507,10 @@ function mirrorGame(gPlayer, playerNum)
                                     drawScreen(playerNum, Du, true, true)
                                     backgroundRem(colours.green, gPlayer)
                                     textRem(colours.black, gPlayer)
-                                    cursorRem(18, 6, gPlayer)
-                                    writeRem("Double", gPlayer)
+                                    writeCenterRem("Double", 6, gPlayer)
                                     return
                                 else
-                                    writeRem("Error: ".. res, players[pNum])
+                                    writeCenterRem("Error: ".. res, 6, players[pNum])
                                 end
                             end
                         end
@@ -605,13 +609,10 @@ while true do
                                                     local suc, res = withdraw(betting[pNum][4], tonumber(text[pNum][1]), atm, text[pNum][2])
                                                     clearScreenRem(false, false, players[pNum])
                                                     backgroundRem(colours.green, players[pNum])
-                                                    cursorRem(11, 13, players[pNum])
                                                     if (suc) then
-                                                        writeRem("Your bet of $".. text[pNum][1].. " has been set", players[pNum])
-                                                        cursorRem(7, 14, players[pNum])
-                                                        writeRem("You cant undo this but if you walk away", players[pNum])
-                                                        cursorRem(14, 15, players[pNum])
-                                                        writeRem("your card wont be saved!", players[pNum])
+                                                        writeCenterRem("Your bet of $".. text[pNum][1].. " has been set", 13, players[pNum])
+                                                        writeCenterRem("You cant undo this but if you walk away", 14, players[pNum])
+                                                        writeCenterRem("your card wont be saved!", 15, players[pNum])
                                                         betting[pNum][2] = true
                                                         loop = false
                                                         for k, v in pairs(betting) do
@@ -620,16 +621,15 @@ while true do
                                                             end
                                                         end
                                                     else
-                                                        writeRem("Error: ".. res, players[pNum])
+                                                        writeCenterRem("Error: ".. res, 13, players[pNum])
                                                     end
                                                 else
                                                     clearScreenRem(true, false, players[pNum])
                                                     backgroundRem(colours.green, players[pNum])
-                                                    cursorRem(11, 13, players[pNum])
                                                     if (tonumber(text[pNum][1]) == 0) then
-                                                        writeRem("Must be more than zero!", players[pNum])
+                                                        writeCenterRem("Must be more than zero!", 13, players[pNum])
                                                     else
-                                                        writeRem("Must be enough money in your account!", players[pNum])
+                                                        writeCenterRem("Must be enough money in your account!", 13, players[pNum])
                                                     end
                                                     betting[pNum][1] = false
                                                     betting[pNum][3] = false
@@ -682,8 +682,7 @@ while true do
                                                 text[pNum][2] = ""
                                                 clearScreenRem(true, false, players[pNum])
                                                 backgroundRem(colours.green, players[pNum])
-                                                cursorRem(11, 13, players[pNum])
-                                                writeRem(res, players[pNum])
+                                                writeCenterRem(res, 13, players[pNum])
                                                 sleep(3)
                                                 clearScreenRem(true, true, players[pNum])
                                             end
@@ -732,66 +731,99 @@ while true do
             drawScreen(k, Du, true, false)
             backgroundRem(colours.green, v)
             textRem(colours.black, v)
-            cursorRem(18, 6, v)
             local cash = tonumber(text[k][1])
             if Gres[k] == 10 then
-                writeRem("Bust", v)
+                writeCenterRem("Bust", 6, v)
                 cash = 0
             elseif Gres[k] == 11 then
-                writeRem("Dealer Bust", v)
+                textRem(colours.red, v)
+                writeCenterRem("Win", 6, v)
                 cash = cash * 2
             else
-                writeRem("Error. Returning money", v)
+                writeCenterRem("Error. Returning money", 6, v)
             end
             if cash ~= 0 then
                 local suc, res = deposit(betting[k][4], cash, atm, text[k][2])
-                cursorRem(18, 7, v)
                 if suc then
-                    writeRem("Deposited your winings of: ".. cash, v)
+                    writeCenterRem("Deposited your winings of: ".. cash, 7, v)
                 else
-                    writeRem("Error: ".. res, v)
+                    textRem(colours.black, v)
+                    writeCenterRem("Error: ".. res, 7, v)
                 end
             end
         end
+
         term.setBackgroundColor(colours.green)
         term.setTextColor(colors.black)
-        term.setCursorPos(18, 10)
-        write("Dealer bust")
+        writeCenter("Dealer bust", yCords[1] - 3)
+        for k, v in pairs(players) do
+            term.setTextColor(colors.black)
+            term.setCursorPos(pCords[table.maxn(players)][k], yCords[1] - 1)
+            if Gres[k] == 10 then
+                term.write(" Bust")
+            elseif Gres[k] == 11 then
+                term.setTextColor(colors.red)
+                term.write("  Win")
+            else
+                term.write(" Error")
+            end
+        end
     else
         for k, v in pairs(players) do
             drawScreen(k, Du, true, false)
             backgroundRem(colours.green, v)
             textRem(colours.black, v)
-            cursorRem(18, 6, v)
             local cash = tonumber(text[k][1])
             if Gres[k] == 0 then
-                writeRem("Error. Returning money", v)
+                writeCenterRem("Error. Returning money", 6, v)
             elseif Gres[k] == 1 then
                 textRem(colours.red, v)
-                writeRem("Win", v)
+                writeCenterRem("Win", 6, v)
                 cash = cash * 2
             elseif Gres[k] == 2 then
-                writeRem("Lose", v)
+                writeCenterRem("Lose", 6, v)
                 cash = 0
             elseif Gres[k] == 3 then
-                writeRem("Push", v)
+                textRem(colours.white, v)
+                writeCenterRem("Push", 6, v)
             elseif Gres[k] == 10 then
-                writeRem("Bust", v)
+                writeCenterRem("Bust", 6, v)
                 cash = 0
             else
-                writeRem("Error. Returning money", v)
+                writeCenterRem("Error. Returning money", 6, v)
             end
             if cash ~= 0 then
                 local suc, res = deposit(betting[k][4], cash, atm, text[k][2])
-                cursorRem(18, 7, v)
                 if (suc) then
-                    writeRem("Deposited your winings of: ".. cash, v)
+                    writeCenterRem("Deposited your winings of: ".. cash, 7, v)
                 else
-                    writeRem("Error: ".. res, v)
+                    textRem(colours.black, v)
+                    writeCenterRem("Error: ".. res, 7, v)
                 end
+            end
+        end
+
+        term.setBackgroundColor(colours.green)
+        for k, v in pairs(players) do
+            term.setTextColor(colors.black)
+            term.setCursorPos(pCords[table.maxn(players)][k], yCords[1] - 1)
+            if Gres[k] == 0 then
+                term.write(" Error")
+            elseif Gres[k] == 1 then
+                term.setTextColor(colors.red)
+                term.write("  Win")
+            elseif Gres[k] == 2 then
+                term.write(" Lose")
+            elseif Gres[k] == 3 then
+                term.setTextColor(colors.white)
+                term.write(" Push")
+            elseif Gres[k] == 10 then
+                term.write(" Bust")
+            else
+                term.write(" Error")
             end
         end
     end
     os.unloadAPI("blackjackMP/cards.lua") --Discard used deck
-    sleep(2) --Allow time to see results
+    sleep(7) --Allow time to see results
 end
