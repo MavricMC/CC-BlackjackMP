@@ -1,4 +1,4 @@
---Blackjack Casino version 0.4--
+--Blackjack Casino version 0.5--
 
 --Made by Mavric on YouTube--
 
