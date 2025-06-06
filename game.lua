@@ -52,7 +52,7 @@ local text = {{}}
 
 --Game Buttons--
 local buttons = {
---text, x, xend
+--text, x
     {"Stand", 18, colors.black,},
     {"Hit", 24, colors.gray},
     {"Double", 28, colors.red}
