@@ -330,13 +330,17 @@ function getPlayer(channel)
 end
 
 function pinpad(key)
-    if (tonumber(key)) then
-        if tonumber(key) == 259 then
-            return true, 10
-        elseif tonumber(key) == 257 then
-            return true, 11
-        elseif tonumber(key) >= 0 and tonumber(key) <= 9 then
-            return true, tonumber(key)
+    if (key == ".") then
+        return true, 10
+    else
+        if (tonumber(key)) then
+            if tonumber(key) == 259 then
+                return true, 10
+            elseif (tonumber(key) == 257 or tonumber(key) == 335) then
+                return true, 11
+            elseif tonumber(key) >= 0 and tonumber(key) <= 9 then
+                return true, tonumber(key)
+            end
         end
     end
     return false
